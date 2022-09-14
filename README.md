@@ -1,4 +1,15 @@
-# dust-lambda
+# lambda
+
+## How to deploy
+
+- Run `npm run zip`
+- On AWS Console, go to lambda and use the option `Upload from` -> `.zip file
+
+## env
+```
+APP_KEY
+APP_SECRET
+```
 
 ## Available scripts
 
