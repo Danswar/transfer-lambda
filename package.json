@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "zip": "zip -r deploy.zip ./"
+    "zip": "zip -r deploy.zip ./ -x .env",
+    "local": "node local.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "jest": "^29.0.3"
   },
   "dependencies": {
-    "@danswar/binance-connector-node": "^1.0.1"
+    "@danswar/binance-connector-node": "^1.0.1",
+    "dotenv": "^16.0.2"
   }
 }
