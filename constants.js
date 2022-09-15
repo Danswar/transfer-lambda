@@ -1,0 +1,7 @@
+const MAIN_TO_FUNDING = "MAIN_FUNDING";
+const FUNDING_TO_MAIN = "FUNDING_MAIN";
+
+module.exports = {
+  MAIN_TO_FUNDING,
+  FUNDING_TO_MAIN
+};
