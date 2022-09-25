@@ -41,7 +41,7 @@ describe("test", () => {
       ]
     }));
 
-    await handler({ type: FUNDING_TO_MAIN });
+    await handler({ appKey: "apiKey", type: FUNDING_TO_MAIN });
 
     expect(userUniversalTransfer).toHaveBeenCalledTimes(1);
     expect(userUniversalTransfer).toHaveBeenCalledWith(
@@ -63,7 +63,7 @@ describe("test", () => {
       ]
     }));
 
-    await handler({ type: MAIN_TO_FUNDING });
+    await handler({ appKey: "apiKey", type: MAIN_TO_FUNDING });
 
     expect(userUniversalTransfer).toHaveBeenCalledTimes(1);
     expect(userUniversalTransfer).toHaveBeenCalledWith(

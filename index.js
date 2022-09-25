@@ -1,10 +1,12 @@
 const { Spot } = require("@danswar/binance-connector-node");
+const { Signer } = require("./Signer");
 const { MAIN_TO_FUNDING, FUNDING_TO_MAIN } = require("./constants");
 
 const eventCheckers = [
   event => Boolean(event),
   ({ type }) => Boolean(type),
-  ({ type }) => type === MAIN_TO_FUNDING || type === FUNDING_TO_MAIN
+  ({ type }) => type === MAIN_TO_FUNDING || type === FUNDING_TO_MAIN,
+  ({ apiKey }) => Boolean(apiKey)
 ];
 
 const isEventDataValid = event => {
@@ -26,19 +28,18 @@ const getBalancesOriginWallet = async (type, client) => {
 };
 
 exports.handler = async event => {
-  if (!isEventDataValid(event)) {
-    console.log("Not valid event");
-    return;
-  }
+  if (!isEventDataValid(event)) return console.log("Not valid event");
 
-  const client = new Spot(process.env.APP_KEY, process.env.APP_SECRET);
-  const { data: balances } = await getBalancesOriginWallet(event.type, client);
+  const { apiKey, type } = event;
+  const signer = new Signer(apiKey);
+  const client = new Spot(signer);
+  const { data: balances } = await getBalancesOriginWallet(type, client);
 
   balances
     .filter(({ free }) => free !== "0")
     .forEach(({ asset, free }) =>
       client
-        .userUniversalTransfer(event.type, asset, free)
+        .userUniversalTransfer(type, asset, free)
         .then(r => console.log({ asset, free, ...r.data }))
     );
 };
