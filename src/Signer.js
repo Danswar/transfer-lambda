@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+
 class Signer {
   constructor(apiKey) {
     this.apiKey = apiKey;

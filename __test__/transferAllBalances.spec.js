@@ -1,7 +1,7 @@
 const { Spot } = require("@danswar/binance-connector-node");
-const { handler } = require("./index");
-const { MAIN_TO_FUNDING, FUNDING_TO_MAIN } = require("./constants");
-const { WALLET_BALANCE_RESPONSE, TRANSFER_RESPONSE } = require("./mocks");
+const { transferAllBalances } = require("../src/transferAllBalances");
+const { MAIN_TO_FUNDING, FUNDING_TO_MAIN } = require("../constants");
+const { WALLET_BALANCE_RESPONSE, TRANSFER_RESPONSE } = require("../mocks");
 
 jest.mock("@danswar/binance-connector-node");
 
@@ -22,15 +22,6 @@ describe("test", () => {
       .mockImplementation(() => Promise.resolve(TRANSFER_RESPONSE));
   });
 
-  it("should not create instances of client if event is not correct shaped", async () => {
-    await handler(null);
-    await handler({});
-    await handler({ type: "" });
-    await handler({ type: "random-thing" });
-
-    expect(Spot).toHaveBeenCalledTimes(0);
-  });
-
   it("should transfer assets from funding to spot when type is FUNDING_MAIN", async () => {
     fundingWallet.mockImplementationOnce(() => ({
       data: [
@@ -41,7 +32,7 @@ describe("test", () => {
       ]
     }));
 
-    await handler({ appKey: "apiKey", type: FUNDING_TO_MAIN });
+    await transferAllBalances({ appKey: "apiKey", type: FUNDING_TO_MAIN });
 
     expect(userUniversalTransfer).toHaveBeenCalledTimes(1);
     expect(userUniversalTransfer).toHaveBeenCalledWith(
@@ -63,7 +54,7 @@ describe("test", () => {
       ]
     }));
 
-    await handler({ appKey: "apiKey", type: MAIN_TO_FUNDING });
+    await transferAllBalances({ appKey: "apiKey", type: MAIN_TO_FUNDING });
 
     expect(userUniversalTransfer).toHaveBeenCalledTimes(1);
     expect(userUniversalTransfer).toHaveBeenCalledWith(
